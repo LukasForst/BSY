@@ -24,7 +24,11 @@
 	"correct": "80"
   },
   {
-	"question": "Name communication protocol used for discovering the link layer address, such as a MAC address associated with a given internet layer address, typically an IPv4 address",
+	"question": "Name communication protocol used for discovering the link layer address, such as a MAC address associated with a given internet layer address, typically an IPv4 address.",
 	"correct": "ARP"
+  },
+  {
+	"question": "Which protocol turns domain names into IP addresses?",
+	"correct": "DNS"
   }
 ]
