@@ -30,5 +30,13 @@
   {
 	"question": "Which protocol turns domain names into IP addresses?",
 	"correct": "DNS"
+  },
+  {
+	"question": "On what port DNS usually listens?",
+	"correct": "53"
+  },
+  {
+	"question": "Is Tomas Pevny's mother good hacker's target?",
+	"correct": "yes"
   }
 ]
