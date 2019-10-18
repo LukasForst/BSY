@@ -6,5 +6,25 @@
   {
 	"question": "Who is god?",
 	"correct": "Sebas"
-  }  
+  },
+  {
+	"question": "Which protocol uses PING?",
+	"correct": "ICMP"
+  },
+  {
+	"question": "The default port for SSH is?",
+	"correct": "22"
+  },
+  {
+	"question": "What port does HTTPS use?",
+	"correct": "443"
+  },
+  {
+	"question": "What port does HTTP use?",
+	"correct": "80"
+  },
+  {
+	"question": "Name communication protocol used for discovering the link layer address, such as a MAC address associated with a given internet layer address, typically an IPv4 address",
+	"correct": "ARP"
+  }
 ]
