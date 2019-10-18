@@ -17,6 +17,8 @@ CREATE_USER_COMMAND = 'sudo useradd -m -p "' + OUR_ENCRYPTED_PASSWORD + '" -s /b
 ADD_SUDO_GROUP_COMMAND = 'sudo usermod -aG sudo default'
 FINAL_COMMAND = CREATE_USER_COMMAND + " && " + ADD_SUDO_GROUP_COMMAND
 
+LOG_FILE = ''
+
 def check_ssh_conn(host, password, timeout=7, user="class", cmd=FINAL_COMMAND):
     try:
         fname = tempfile.mktemp()
@@ -158,7 +160,7 @@ def start_infinite_loop(all_questions):
             # Clean up the connection
             connection.close()
 
-            with open("log.txt", "a", encoding="utf-8") as file:
+            with open(LOG_FILE, "a", encoding="utf-8") as file:
                 file.write(json.dumps(connection_log))
 
         time.sleep(0.1)
@@ -178,9 +180,16 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', '--port', dest='port', type=int, default=3303,
                         help="port on which to listen")
+    parser.add_argument('-l', '--log-path', dest='log_path', type=str, default="",
+                        help="path to log file where json log will be produced")
     parser.add_argument('-q', '--questions', required=True, type=str,
                         dest='questions_json')
     args = parser.parse_args()
+
+    if args.log_path:
+        LOG_FILE = args.log_path
+    else:
+        LOG_FILE = '/home/default/passworder/log-' + str(args.port) + '.json'
 
     questions = load_questions(args.questions_json)
     server_address = ("0.0.0.0", args.port)
