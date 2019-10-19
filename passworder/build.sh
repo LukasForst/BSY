@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Abort if anything returns non-zero return code
+set -e
+
 pip install --user pexpect pyinstaller
 
 mkdir /work/build
