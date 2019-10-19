@@ -1,12 +1,7 @@
 ##### build
 
-Go to docker image
+To build the binary using docker just use prepared Makefile
 
-`sudo docker run --rm -it -v $(pwd):/work python:3.6 /bin/bash`
+`make build`
 
-and run build script
-
-`./work/build.sh`
-
-jump out of docker. it's done.
-result is in `binary_get_permissions.tar.gz`
+It will produce `binary_get_permissions.tar.gz`
