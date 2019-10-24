@@ -29,7 +29,7 @@ def run_ncats(ip, port, msg):
 
 def generate_message(ip):
     suffix_options = [".bin", "", ".exe", ".txt", ""]
-    return f"PUSHING /files/ff/{uuid.uuid4().hex}{random.choice(suffix_options)}"
+    return f"FROM PORT 80 SERVING /files/ff/{uuid.uuid4().hex}{random.choice(suffix_options)}"
 
 
 def generate_random_port(ip):
