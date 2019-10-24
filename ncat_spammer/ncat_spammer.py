@@ -4,7 +4,7 @@ import time
 import random
 import uuid
 
-LOG_FILE = "ncat_spammer.log"
+LOG_FILE = ""
 
 
 def log(to_log):
@@ -19,7 +19,7 @@ def load_ips(path):
 
 def run_ncats(ip, port, msg):
     try:
-        command = ["ncat", ip, port, "-u", "<", f'\"{msg}\"']
+        command = ["echo", f'\"{msg}\"', "|", "ncat", ip, port, "-u"]
         log(f"Exec: {command}")
         subprocess.run(command)
     except Exception as e:
@@ -33,7 +33,7 @@ def generate_message(ip):
 
 
 def generate_random_port(ip):
-    return random.randint(0, 65535)
+    return str(random.randint(0, 65535))
 
 
 def execute_spam(ips):
@@ -48,7 +48,11 @@ if __name__ == "__main__":
     parser.add_argument('-l', '--logfile', dest='log_path', type=str, default="",
                         help="Path to file where all logs should be stored")
     args = parser.parse_args()
-    LOG_FILE = f"{args.log_path.strip()}/{LOG_FILE}"
+
+    if args.log_path:
+        LOG_FILE = args.log_path
+    else:
+        LOG_FILE = "/home/class/ncat_spammer/ncat_spammer.log"
 
     ips = load_ips(args.ip_path)
     ips_log = "\n".join(ips)
@@ -56,4 +60,4 @@ if __name__ == "__main__":
 
     while True:
         execute_spam(ips)
-        time.sleep(60)
+        time.sleep(10)
