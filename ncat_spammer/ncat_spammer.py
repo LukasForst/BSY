@@ -60,4 +60,4 @@ if __name__ == "__main__":
 
     while True:
         execute_spam(ips)
-        time.sleep(10)
+        time.sleep(random.randint(5, 15))
