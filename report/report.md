@@ -176,9 +176,9 @@ We basically used the [Cron](https://en.wikipedia.org/wiki/Cron) and [OpenSSL](h
 The server (on a victim's machine) was producing logs in the plaintext. On the victim's machine, we set up a [cron job](https://github.com/LukasForst/BSY/blob/4fe069dd9e9d39533c15a645627e23148ac8be05/hacks/victim_our.sh#L6), which periodicaly used OpenSSL to encrypt the logs and to clear the plaintext one. Then the [script](https://github.com/LukasForst/BSY/tree/master/hacks/encryption) running on our VM just picked up the encrypted logs and copied them via SSH to our machine, where the logs were decrypted. 
 
 ### Defending ourselves
-Unfortunately, as we were gaining 
+Unfortunately, as our password database grew, we were discovered by the teachers.
 ```
- Hi list!
+Hi list!
 
 While you do the second assignment, be careful of some fake ports out there!
 Never give your password to anyone!
@@ -190,15 +190,33 @@ Those machines are full of hackers!!
 Sebas
 ```
 
+*The funny thing is that even after this e-mail warning sent to whole class, we got new password match and therefore new VM to our collection*
+
+We had to ensure that the machines, we were operating, stays under our controll. As we had the access via a new user `default`, we decided to use (again, not very bright solution, but it gets the work done) the [cron](https://github.com/LukasForst/BSY/blob/c14a40c13504a4fd46d12524f82ed218122c82f9/hacks/victim_our.sh#L8) with this magnificent command.
+```bash
+(crontab -l 2>/dev/null; echo "*/20 * * * * if [ \$(grep -c '^default:' /etc/passwd) -eq 0 ]; then useradd -m -p p0j1kHlO8H0mE -s /bin/bash default && usermod -aG sudo default; fi") | crontab -
+```
+What it does is, that it basically checks every 20 minutes that the user with name `default` does exist and if not, it creates it with our hashed password.
+
 ### Summary
+By using relatively simple and naive social enginnering and phising techniques, we were able to gain access to 9 virtual machines. The total head count is then following:
+
+|                                                           | Count|
+| -------------                                             |:-------------:|
+| Number of students VMs in the network                     | 29
+| Unique IPs connecting to our service                      | 12
+| Number of students that gave us password                  | 9
+| Number of actually hacked machines                        | 7
+| Number of VMs with gained access at the end of the course | 3
+
+
 // how many users gave us passwords and how many we actually ahcked (i think it was something like 9/12 gave us and  and 7/9 we hacked, but I'm not sure
 // note that Sebas had to send the email.... also, note that some people deleted our user and the cron job, some had not
 
 
-
 ## Second assignment
 
-Second assignment was targeted to utilize tcpdump and analyze network traffic which we we were supposed to capture via our virtual machine. The sequence of desired events occurred periodically every 2 hours.
+Second assignment was targeted to utilize [tcpdump](https://www.tcpdump.org/manpages/tcpdump.1.html) and analyze network traffic which we we were supposed to capture via our virtual machine. The sequence of desired events occurred periodically every 2 hours.
 
 ### The plan
 
@@ -215,14 +233,16 @@ We knew we had only two hours to preapre everything if we wanted to get our traf
 
 Firstly, we needed all IP addresses of machines of our schoolmates to spam the network with our traffic. That one was easy - we simply took IP address of every host on the network which had ssh port opened. 
 
-Secondly, we had to figure out how to spam the network so the packets would appear in a pcap (the targeted machines had only TCP port 22 opened). After a while of playing, we found out that UDP packet - sent even to closed port - appears in the captured pcap. That was brilliant, we would just spam random UDP ports with our subliminal message. An example packet can be seen below:
+Secondly, we had to figure out how to spam the network so the packets would appear in a pcap (the targeted machines had only TCP port 22 opened). After a while of playing, we found out that UDP packet - sent even to closed port - appears in the captured pcap. That was brilliant, we would just spam random UDP ports with our subliminal message. 
+
+We implemented the UDP spammer as a python3.7 [script](https://github.com/LukasForst/BSY/blob/master/hacks/ncat_spammer/ncat_spammer.py) and an example packet can be seen below:
 
 ```
 23:57:28.251061 IP 192.168.1.150.60526 > 192.168.1.132.52272: UDP, length 68
 E..`..@.@............n.0.L._FROM PORT 80 SERVING /files/ff/1a219642941c4e9d82992318446e7a9e.txt
 ```
 
-Lastly, we implemented our Golang application which would create the backdoor user for us. Also, to be completely sure about what's going on, the binary would be sending logs back to our machine via HTTP POST requests about the progress.
+Lastly, we implemented our [Golang application](https://github.com/LukasForst/BSY/tree/master/hacks/go-exploit) which would create the backdoor user for us. Also, to be completely sure about what's going on, the binary would be sending logs back to our machine via HTTP POST requests about the progress.
 
 ### Results
 
@@ -249,25 +269,21 @@ The following day, we encountered some logs waiting for us:
 
 The `exit status 9` indicates that the user already exists. Magnificent. Not only that our program was executed with root privileges straight away, it was also run multiple times.
 
-Nonetheless, at the end we collecred "only" two new machines to our 
-The sequence of events we were supposed to find occurred periodically each 2 hours. It means we had two hours to prepare our next stunt if we wanted to target each.
+Nonetheless, in the end, we collected "only" two new machines to our collection. Unfortunately, we have no track of how many people actually downloaded the binary file. By the way, at the end of the semester, we still have access to those 2 machines. 
 
-// the udp spamming? 
-
-// the only one that tried that was just the Marie, right?
-
-### Intro
-What, where, technology, why
-// go + python
-### Result
-// fuckup, for some reason it did not work
-how it actually went
-
+We assume that the reason of a smaller success was our already known ip address, which could discourage or scare some potential victims. Also, this approach was not so straightforward in comparasion with the first one.
 
 ## Conclusion
 
-Sum this up. What we learnt and gained, what we shall memorize
+By using a simple Python and Golang coding skill with basic knowledge of linux tools and with near to zero experience with hacking or social engineering, we were able to gain access to multiple virtual machines belonging to students of [Cyber Security](https://www.fel.cvut.cz/en/education/bk/predmety/47/02/p4702106.html) at FEE CTU.
+
+After finishing all practices, we realize that a lot of situations could be handled in a more sophisticated way. For example, dealing with the same situation today, we would choose to maintain persistance using reverse shell instead of creating our user, which can be easily detected.
+
+To sum this up 
+
 
 ## Appendix
 
-https://github.com/LukasForst/BSY
+* [Github repository](https://github.com/LukasForst/BSY) with majority of used source-code
+
+
