@@ -1,6 +1,6 @@
 # Phishing cybersecurity students
 ---
-*Authors: Martin Řepa, Lukáš Forst*
+*Authors: [Martin Řepa](https://www.linkedin.com/in/martinrepa), [Lukáš Forst](https://forst.pw)*
 
 Phishing has been recently the most efficient attack. It exploits human naivity and none vigilance - attack vector which is actually very hard to defend. 
 
