@@ -65,8 +65,7 @@ We tried to log in to the victim's VM using default `class` user and the `<color
 // password green234
 > class@ubuntu16:~$ 
 ```
-Of course, we were surprised how easy it was. What was even more surprising was the fact that we did steal multiple passwords, so not just one user, but three of them gave us their passwords.
-And of course, we did steal all their flags (unfortunately, we did not get additional points for them).
+Of course, we were surprised how easy it was. What was even more surprising was the fact that we did steal multiple passwords, so not just one user, but three of them gave us their passwords. And of course, we did steal all their flags (unfortunately, we did not get additional points for them).
 
 To be honest, we did not expect stealing any password. It was just for fun. However, this motivated us to go further.
 
@@ -80,8 +79,7 @@ To do that, we created a set of questions that were randomly asked by the server
     "correct": "https"
 }
 ```
-The server picked up a few random questions and asked victim if they know the correct answer.
-If their answer was correct, then the server asked for the password to verify the identity of the victim.
+The server picked up a few random questions and asked victim if they know the correct answer. If their answer was correct, then the server asked for the password to verify the identity of the victim.
 ```
 > What is an ecrypted form of http?
 https
@@ -109,8 +107,7 @@ We also logged the answers.
 All in all, we started to look like a real service used for the first assignment in the cyber-sec class. Again, we didn't think that we would get any passwords. In spite of class full of pretty smart students, few of them fell for the trap, and we gained access to 2 additional VMs.
 
 ### Automating the password verification
-As the log file grew, we were not able to check all the provided passwords, so we had to automate the password checking. 
-We used the very same service to check the provided password by trying to connect via SSH to the victim's VM with the default `class` username. 
+As the log file grew, we were not ablfacte to check all the provided passwords, so we had to automate the password checking. We used the very same service to check the provided password by trying to connect via SSH to the victim's VM with the default `class` username. 
 ```json
 {
   ...,
@@ -154,20 +151,17 @@ We don't know for sure what happened, but we suppose that the user gave us his/h
 This led us to the next improvements.
 
 ### Faster than the victim
-We realized that we need to create a backdoor to the victim's system, to be able to access the VM even after the user changed the password. As we did not have any experience with creating backdoors, we just tried to create a new Linux user called `default`. 
-This was done automatically when the server successfully verified the password it got from the victim.
+We realized that we need to create a backdoor to the victim's system, to be able to access the VM even after the user changed the password. As we did not have any experience with creating backdoors, we just tried to create a new Linux user called `default`. This was done automatically when the server successfully verified the password it got from the victim.
 
 ### Spreading the infection
-We already had passwords and backdoors from the 5 victims, and we started to think about the moving of our server into the victim's VMs, to lower the risk of exposure. Also, we wanted to be able to deploy the server to any computer without installing additional dependencies, so we had to compile our python server into native code using [PyInstaller](https://www.pyinstaller.org/).
-To compile the code and deploy it to VM was a bit tricky as our local machines had different environments, and the VMs had a completely different environment. After trial and error, we were able (to some extent) to replicate the VMs environment in the specific Docker python image - like really specific, for some reason - the one that worked was:
+We already had passwords and backdoors from the 5 victims, and we started to think about the moving of our server into the victim's VMs, to lower the risk of exposure. Also, we wanted to be able to deploy the server to any computer without installing additional dependencies, so we had to compile our python server into native code using [PyInstaller](https://www.pyinstaller.org/). To compile the code and deploy it to VM was a bit tricky as our local machines had different environments, and the VMs had a completely different environment. After trial and error, we were able (to some extent) to replicate the VMs environment in the specific Docker python image - like really specific, for some reason - the one that worked was:
 ```
 python@sha256:b53bb1ecef1995577aacacaef0a9ce681e3267e2166646eb4788b9d5eff54735
 ```
 The [Makefile](https://github.com/LukasForst/BSY/blob/adece37ec96231843cc5fcae99aa4c71adb4d1fa/hacks/passworder/Makefile) and the used [build script](https://github.com/LukasForst/BSY/blob/adece37ec96231843cc5fcae99aa4c71adb4d1fa/hacks/passworder/build.sh) can be found in the [Git repo](https://github.com/LukasForst/BSY/).
 
 As we managed to compile the server, we were facing another challenge - to get the found passwords from the victim VM to our VM without possibly exposing the found passwords.
-Our solution to this problem was... a bit more complicated than it could be. Still, we were lazy and tried not to modify the application itself, so we rather bent the environment the server was running in.
-We basically used the [Cron](https://en.wikipedia.org/wiki/Cron) and [OpenSSL](https://www.openssl.org/) to encrypt, transfer and decrypt the logs.
+Our solution to this problem was... a bit more complicated than it could be. Still, we were lazy and tried not to modify the application itself, so we rather bent the environment the server was running in. We basically used the [Cron](https://en.wikipedia.org/wiki/Cron) and [OpenSSL](https://www.openssl.org/) to encrypt, transfer and decrypt the logs.
 
 The server (on a victim's machine) was producing logs in the plaintext. On the victim's machine, we set up a [cron job](https://github.com/LukasForst/BSY/blob/4fe069dd9e9d39533c15a645627e23148ac8be05/hacks/victim_our.sh#L6), which periodically used OpenSSL to encrypt the logs and to clear the plaintext one. Then the [script](https://github.com/LukasForst/BSY/tree/master/hacks/encryption) running on our VM just picked up the encrypted logs and copied them via SSH to our machine, where the logs were decrypted. 
 
