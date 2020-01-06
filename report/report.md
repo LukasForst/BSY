@@ -12,7 +12,25 @@ During practices within cyber-security related subject we were split into two-ma
 
 ## First Assignment
 
-Our first task was to use [nmap](https://nmap.org/) to discover secret services on secret machines within our virtual network and, lastly, find the token. Many jokes and baits were set up to confuse our search. One service, for example, offered the following URL - [https://bit.ly/take-your-token](https://bit.ly/take-your-token).
+Our first task was to use [nmap](https://nmap.org/) to discover secret services on secret machines within our virtual network and, lastly, find the token. Many jokes and baits were set up to confuse our search. One service, for example, offered the following URL - [https://bit.ly/take-your-token](https://bit.ly/take-your-token). Another one returned following ASCI art.
+
+```
+<HEADER>
+<TITLE>Nope!</TITLE>
+<P>
+ -----------------------------------------------------
+ This is not the port you are looking for. Try harder!
+ ----------------------------------------------------- 
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+
+https://linuxgazette.net/issue67/orr.html
+</P>
+</BODY>
+```
 
 ### Let's have some fun
 After we found our token, we got an idea to make our service to confuse our school mates. Firstly, we launched a simple python HTTP server, which was just replying following text:
