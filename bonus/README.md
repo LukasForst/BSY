@@ -63,7 +63,9 @@ So I tried to scan the target machine with nmap.
 ```bash
 sudo nmap -n -v -sS 192.168.1.127 -T3 -p-
 ```
-The command basically returned the following ports `22`, `902`, `6667`, `8081`. 22 was SSH port, but more interesting was port 902 which was running an slightly older version of SSH. Maybe a lead? It was interesting that one machine was running two different versions of SSH - maybe multiple virtual machines on one IP? Or running VM inside VM? Docker? 
+The command basically returned the following ports `22`, `902`, `6667`, `8081`. `22` was SSH port, but more interesting was port `902` which was running an slightly older version of SSH. Maybe a lead? It was interesting that one machine was running two different versions of SSH - maybe multiple virtual machines on one IP? Or running VM inside VM? Docker? 
+
+I didn't know, so I decided to let it sink in and started to investigate other ports.
 
 #### Hope?
 Port 8081 was running a web page! That seemed as a lead to something so I tried `ncat` command
@@ -73,7 +75,7 @@ Port 8081 was running a web page! That seemed as a lead to something so I tried 
 ```
 and got following `index.html`.
 ```html
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+    <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
     <html>
         <head>
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -138,6 +140,7 @@ Knock knock... Your VM might be handy.
 ```
 Could it possible be a hint? Let's try google once more. 
 ![knock knock](assets/knock_knock.png)
+
 Apart from a lot of knock knock jokes, the first google page revealed interesting technique I didn't know about - port knocking. So... the numbers are ports and I'm supposed to knock on them!
 
 #### Knock Knock, anybody home?
@@ -156,8 +159,6 @@ And now I got one more port - `8080` - to my collection! Wonderful!
 The subsequent `curl` returned following output:
 ```
 This is a vulnerable web application for showcasing CVE 2014-6271, a.k.a. Shellshock.
-
-Vulnerability as a Service, brought to you by <a href="https://hml.io/" target="_blank">https://hml.io/</a>.</br>
 ```
 Vulnerable application, very nice. I simply used the approach described on [exploit-db] (https://www.exploit-db.com/exploits/34766) to get in.
 
@@ -201,6 +202,12 @@ PORT   STATE SERVICE    VERSION
 MAC Address: 08:00:27:06:8F:03 (Oracle VirtualBox virtual NIC)
 ```
 
+Let's try!
+```bash
+> ssh grace@192.168.1.127
+donaldduck
+```
+And the deserved welcome message!
 ```
 *****************************************************************
 <Grinch> Congratulations! This is the end of stage 3!		*		
@@ -208,10 +215,10 @@ MAC Address: 08:00:27:06:8F:03 (Oracle VirtualBox virtual NIC)
 <Grinch> Look for presents to get instructions for stage 4!	*
 *****************************************************************
 ```
-
+Uff... not gonna lie, that was a tough one.
 
 ## Stage 4
-
+This time, the instructions were easy to find.
 ```
 grace@grinchLair:~$ cat Stocking
 For Final stage (Stage 4) you should desing and implement a C&C bot using the github repo/github gist(https://gist.github.com/).
@@ -227,7 +234,7 @@ And report results back to the control server.
 Good luck and Merry Xmas! 
 ```
 
-Unfortunately due to time pressure, I was unable to finish my botnet, so unfortunately no stage 4.
+Unfortunately due to time pressure, I was unable to finish my botnet and therefore, sadly, no stage 4 for me.
 
 # Conclusion
 
