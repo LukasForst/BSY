@@ -62,14 +62,32 @@ You have 9 remaining attempts.
 
 Woah. 3/4 without opening the PCAP. Really nice - the question number 3 was a surprise for me, I didn't expect getting it correct.
 
-### Desperate Times Begin
+### Desperate times begin
 
 I began actual PCAP analysis with Wireshark. I was really hyped after the first steps when I was able to guess some answers so I expected to go trough this stage really fast. Unfortunately, this was not the case.
 
 The PCAP contained 10 000 packets. Which is a lot, if you should go through all of them one by one. A nightmare. I decided to utilize [PacketTotal](https://packettotal.com/app/analysis?id=fb1f4903ca5852da9d6baf9b38c4afed) and their [strange](https://packettotal.com/app/analysis?id=fb1f4903ca5852da9d6baf9b38c4afed&name=weird) and [suspicious](https://packettotal.com/app/analysis?id=fb1f4903ca5852da9d6baf9b38c4afed&name=weird) activity tabs. Unfortunately with no luck, as only records there was invalid certificates, because the PCAP had wrong dates for the packets.
 
+### Back to the basis
 
-![pcap](assets/pcap.png)
+After a while I decided just go back to the Wireshark and go through the packets manually. In the first lectures, teachers said that the malware typically uses TCP transfer, so let's filter just the TCP traffic using `tcp` filter and see what is going on.
+
+Well that didn't help much as the number of TCP packets was huge.
+![applied filter](assets/filtered.png)
+
+But let's choose te first packet in the list (packet 229), see whats inside
+![first packet](assets/first_packet.png)
+
+and use this very nice function of Wireshark - follow TCP stream.
+![follow](assets/follow.png)
+
+Ok, so we are probably looking at the traffic from computer named `ROBERT_PC` (and Robert is probably the user). Interesting is that the traffic is periodical (the `8`s in the stream), which is unusual in the TCP traffic (or at least was enough suspicious for me to investigate further). But what is that `_e060a5c4-DARKVNC` string in the beginning of the transport?
+
+![empty google](assets/empty_search.png)
+
+Ok then, `Try fewer keywords` seemed just right.
+
+![dark vnc](assets/dark_vnc.png)
 
 ### Got it!
 The final virus name was [DarkVNC](https://reaqta.com/2017/11/short-journey-darkvnc/). And therefore the correct answers:
@@ -231,7 +249,7 @@ The short exploration of machine showed a lot of files in the `/home/grinch` dir
 [a-zA-Z0-9]{3} symetric:
 <criptic_text_here>
 ```
-*Unfortunately I didn't stored the cipher in plain text on my laptop and in the moment of writhing are the VMS not accessible. The [cipher screenshot](assets/decryption.png) can be seen bellow on Criptii site.*
+*Unfortunately I didn't store the cipher in plain text on my laptop and in the moment of writhing are the VMs not accessible. The [cipher screenshot](assets/decryption.png) can be seen bellow taken on Criptii site.*
 
 ### Decrypting...
 It was apparent that we are looking at the encrypted text. But which cipher was used? The first line seemed to be hint - so 3 letters, upper and lower cases and numbers... Again, let's google a bit - first result for key `symetric ciphers` led me to the [list of ciphers](http://www.crypto-it.net/eng/symmetric/index.html). Two candidates for the regex - RC4 and RC2. I already knew my password - token given on the beginning of the assignment - `TroubledOlive`, but the ciphers needed an hexa version of it -> just convert it using [rapidtables](https://www.rapidtables.com/convert/number/ascii-to-hex.html).
@@ -241,8 +259,7 @@ It was apparent that we are looking at the encrypted text. But which cipher was 
 ![decryption](assets/decryption.png)
 
 ```
-Hello there! This is the end of stage 2!
-There are many Elves on the shelf, but Grace is special. Instructions for the next stage are in home directory of this elf!
+Hello there! This is the end of stage 2! There are many Elves on the shelf, but Grace is special. Instructions for the next stage are in home directory of this elf!
 ```
 
 ## Stage 3
