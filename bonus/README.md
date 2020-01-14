@@ -1,5 +1,5 @@
 
-# Bonus Assignment report
+# Bonus Assignment Report
 
 ---
 
@@ -7,7 +7,14 @@
 
 ---
 
+In this blog post, I describe how I managed to get through various tasks in the last and bonus assignment of [BSY](https://www.fel.cvut.cz/en/education/bk/predmety/47/02/p4702106.html) subject at FEE CTU.
 
+# Assignment
+
+We were given a token for access as well as encryption, PCAP with captured traffic and IP address and port. The assignment was this:
+
+* Download the PCAP and look into is and go to 192.168.1.167:9292
+* Follow the instructions you find on the way
 
 ## Stage 1
 
@@ -174,7 +181,9 @@ The short exploration of machine showed a lot of files in the `/home/grinch` dir
 ```
 
 ### Decrypting...
-It was apparent that we are looking at the encrypted text. But which cipher was used? The first line seemed to be hint - so 3 letters, upper and lower cases and numbers... Again, let's google a bit - first result for key `symetric ciphers` led me to http://www.crypto-it.net/eng/symmetric/index.html with list of ciphers. Two candidates for the regex - RC4 and RC2. [Criptii](https://cryptii.com/) for the rescue!
+It was apparent that we are looking at the encrypted text. But which cipher was used? The first line seemed to be hint - so 3 letters, upper and lower cases and numbers... Again, let's google a bit - first result for key `symetric ciphers` led me to http://www.crypto-it.net/eng/symmetric/index.html with list of ciphers. Two candidates for the regex - RC4 and RC2. I already new my password - token given on the beginning of the assignment - `TroubledOlive`, but the ciphers needed an Hexa version of it -> just convert it using [rapidtables](https://www.rapidtables.com/convert/number/ascii-to-hex.html).
+
+[Criptii](https://cryptii.com/) for the rescue!
 
 ![decryption](assets/decryption.png)
 
