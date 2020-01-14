@@ -36,7 +36,7 @@ Grinch is asking questions and we have limit for the answers, ok then. The limit
 
 ![yes, no](assets/yes_no.jpg)
 
-### Brute-Forcing answers
+### Brute-Forcing Answers
 
 Second question has 5 options and the last one only two, so I will loose only 5 attempts. That's worth a risk. Moreover, we can try to guess other questions just for fun - the first one is open question so I can not simply ques it, but the third one is just number. I decided just to put the number of attempts I already tried.
 
@@ -62,10 +62,18 @@ You have 9 remaining attempts.
 
 Woah. 3/4 without opening the PCAP. Really nice - the question number 3 was a surprise for me, I didn't expect getting it correct.
 
+### Desperate Times Begin
 
-The final virus name was [DarkVNC](https://reaqta.com/2017/11/short-journey-darkvnc/).
+I began actual PCAP analysis with Wireshark. I was really hyped after the first steps when I was able to guess some answers so I expected to go trough this stage really fast. Unfortunately, this was not the case.
 
-And therefore the correct answers:
+The PCAP contained 10 000 packets. Which is a lot, if you should go through all of them one by one. A nightmare. I decided to utilize [PacketTotal](https://packettotal.com/app/analysis?id=fb1f4903ca5852da9d6baf9b38c4afed) and their [strange](https://packettotal.com/app/analysis?id=fb1f4903ca5852da9d6baf9b38c4afed&name=weird) and [suspicious](https://packettotal.com/app/analysis?id=fb1f4903ca5852da9d6baf9b38c4afed&name=weird) activity tabs. Unfortunately with no luck, as only records there was invalid certificates, because the PCAP had wrong dates for the packets.
+
+
+![pcap](assets/pcap.png)
+
+### Got it!
+The final virus name was [DarkVNC](https://reaqta.com/2017/11/short-journey-darkvnc/). And therefore the correct answers:
+
 ```
 <Grinch> Please provide your token
 TroubledOlive
@@ -221,11 +229,12 @@ And voila! Winner winner chicken dinner! I was in.
 The short exploration of machine showed a lot of files in the `/home/grinch` directory with our usernames -> so executing `cat /home/grinch/.forstluk.txt` on the Grinch's machine gave me the following output:
 ```
 [a-zA-Z0-9]{3} symetric:
-<my_ciphre here>
+<criptic_text_here>
 ```
+*Unfortunately I didn't stored the cipher in plain text on my laptop and in the moment of writhing are the VMS not accessible. The [cipher screenshot](assets/decryption.png) can be seen bellow on Criptii site.*
 
 ### Decrypting...
-It was apparent that we are looking at the encrypted text. But which cipher was used? The first line seemed to be hint - so 3 letters, upper and lower cases and numbers... Again, let's google a bit - first result for key `symetric ciphers` led me to http://www.crypto-it.net/eng/symmetric/index.html with list of ciphers. Two candidates for the regex - RC4 and RC2. I already new my password - token given on the beginning of the assignment - `TroubledOlive`, but the ciphers needed an Hexa version of it -> just convert it using [rapidtables](https://www.rapidtables.com/convert/number/ascii-to-hex.html).
+It was apparent that we are looking at the encrypted text. But which cipher was used? The first line seemed to be hint - so 3 letters, upper and lower cases and numbers... Again, let's google a bit - first result for key `symetric ciphers` led me to the [list of ciphers](http://www.crypto-it.net/eng/symmetric/index.html). Two candidates for the regex - RC4 and RC2. I already knew my password - token given on the beginning of the assignment - `TroubledOlive`, but the ciphers needed an hexa version of it -> just convert it using [rapidtables](https://www.rapidtables.com/convert/number/ascii-to-hex.html).
 
 [Criptii](https://cryptii.com/) for the rescue!
 
