@@ -34,7 +34,7 @@ You have 14 remaining attempts.
 ```
 Grinch is asking questions and we have limit for the answers, ok then. The limit would suggest that it is not possible to brute-force it. 
 
-![yes, no](assets/yes_no.jpg)
+![yes, no](https://raw.githubusercontent.com/LukasForst/BSY/master/bonus/assets/yes_no.jpg)
 
 ### Brute-Forcing Answers
 
@@ -73,21 +73,21 @@ The PCAP contained 10 000 packets. Which is a lot, if you should go through all 
 After a while I decided just go back to the Wireshark and go through the packets manually. In the first lectures, teachers said that the malware typically uses TCP transfer, so let's filter just the TCP traffic using `tcp` filter and see what is going on.
 
 Well that didn't help much as the number of TCP packets was huge.
-![applied filter](assets/filtered.png)
+![applied filter](https://raw.githubusercontent.com/LukasForst/BSY/master/bonus/assets/filtered.png)
 
 But let's choose te first packet in the list (packet 229), see whats inside
-![first packet](assets/first_packet.png)
+![first packet](https://raw.githubusercontent.com/LukasForst/BSY/master/bonus/assets/first_packet.png)
 
 and use this very nice function of Wireshark - follow TCP stream.
-![follow](assets/follow.png)
+![follow](https://raw.githubusercontent.com/LukasForst/BSY/master/bonus/assets/follow.png)
 
 Ok, so we are probably looking at the traffic from computer named `ROBERT_PC` (and Robert is probably the user). Interesting is that the traffic is periodical (the `8`s in the stream), which is unusual in the TCP traffic (or at least was enough suspicious for me to investigate further). But what is that `_e060a5c4-DARKVNC` string in the beginning of the transport?
 
-![empty google](assets/empty_search.png)
+![empty google](https://raw.githubusercontent.com/LukasForst/BSY/master/bonus/assets/empty_search.png)
 
 Ok then, `Try fewer keywords` seemed just right.
 
-![dark vnc](assets/dark_vnc.png)
+![dark vnc](https://raw.githubusercontent.com/LukasForst/BSY/master/bonus/assets/dark_vnc.png)
 
 ### Got it!
 The final virus name was [DarkVNC](https://reaqta.com/2017/11/short-journey-darkvnc/). And therefore the correct answers:
@@ -117,9 +117,9 @@ Finally!
 ## Stage 2
 Well... The hints were kind of cryptic. I must admit, that in the beginning I was confused. However, when programmer is confused, he just randomly puts things to the google and hopes for the best.
 
-I tried the first hint - number `3232235903` - and I was suprised, that this is actually something. An IP address!
+I tried the first hint - number `3232235903` - and I was surprised, that this is actually something. An IP address!
 
-![ip](assets/ip_solve.png)
+![ip](https://raw.githubusercontent.com/LukasForst/BSY/master/bonus/assets/ip_solve.png)
 
 Perfect, now I have the IP address of the target computer - `192.168.1.127`. But what about the other hint? It seemed that this is a base64 and indeed the base64 conversion returned something that seemed valid.
 
@@ -129,7 +129,7 @@ Perfect, now I have the IP address of the target computer - `192.168.1.127`. But
 ```
 
 Now, this sequence looks like hex code, right? The spaces, two numbers and letters... Definitely hex code. Here comes the very nice tool [CyberChef](https://gchq.github.io/CyberChef/) for pipelining the decryption and encryption.
-![cyber chef](assets/cyber_chef.png)
+![cyber chef](https://raw.githubusercontent.com/LukasForst/BSY/master/bonus/assets/cyber_chef.png)
 
 Numbers sequence `7000,8000,9000,10000`. 
 
@@ -216,7 +216,7 @@ I tried to step back and look at the message from Grinch one more time as I stil
 Knock knock... Your VM might be handy.
 ```
 Could it possible be a hint? Let's try google once more. 
-![knock knock](assets/knock_knock.png)
+![knock knock](https://raw.githubusercontent.com/LukasForst/BSY/master/bonus/assets/knock_knock.png)
 
 Apart from a lot of knock knock jokes, the first google page revealed interesting technique I didn't know about - port knocking. So... the numbers are ports and I'm supposed to knock on them!
 
@@ -249,14 +249,14 @@ The short exploration of machine showed a lot of files in the `/home/grinch` dir
 [a-zA-Z0-9]{3} symetric:
 <criptic_text_here>
 ```
-*Unfortunately I didn't store the cipher in plain text on my laptop and in the moment of writhing are the VMs not accessible. The [cipher screenshot](assets/decryption.png) can be seen bellow taken on Criptii site.*
+*Unfortunately I didn't store the cipher in plain text on my laptop and in the moment of writhing are the VMs not accessible. The [cipher screenshot](https://raw.githubusercontent.com/LukasForst/BSY/master/bonus/assets/decryption.png) can be seen bellow taken on Criptii site.*
 
 ### Decrypting...
 It was apparent that we are looking at the encrypted text. But which cipher was used? The first line seemed to be hint - so 3 letters, upper and lower cases and numbers... Again, let's google a bit - first result for key `symetric ciphers` led me to the [list of ciphers](http://www.crypto-it.net/eng/symmetric/index.html). Two candidates for the regex - RC4 and RC2. I already knew my password - token given on the beginning of the assignment - `TroubledOlive`, but the ciphers needed an hexa version of it -> just convert it using [rapidtables](https://www.rapidtables.com/convert/number/ascii-to-hex.html).
 
 [Criptii](https://cryptii.com/) for the rescue!
 
-![decryption](assets/decryption.png)
+![decryption](https://raw.githubusercontent.com/LukasForst/BSY/master/bonus/assets/decryption.png)
 
 ```
 Hello there! This is the end of stage 2! There are many Elves on the shelf, but Grace is special. Instructions for the next stage are in home directory of this elf!
@@ -287,7 +287,7 @@ Ondrej
 
 What the mail was basically saying is this:
 
-![decryption](assets/force.jpg)
+![decryption](https://raw.githubusercontent.com/LukasForst/BSY/master/bonus/assets/force.jpg)
 
 *(it is even funnier as my name is Lukas)*
 
@@ -297,7 +297,7 @@ What the mail was basically saying is this:
 
 I also knew, that it is enough to use only 20 000 passwords - you know, because Ondra said that. But from which password database? And again, Google for the rescue.
 
-![pass](assets/rockyou.png)
+![pass](https://raw.githubusercontent.com/LukasForst/BSY/master/bonus/assets/rockyou.png)
 
 20k passwords from [RockYou](https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/Leaked-Databases/rockyou-60.txt) database! Let's go then.
 
@@ -331,7 +331,7 @@ donaldduck
 ```
 and....
 
-<img src="assets/in.jpg" data-canonical-src="assets/in.jpg" width="360" height="300" />
+<img src="https://raw.githubusercontent.com/LukasForst/BSY/master/bonus/assets/in.jpg" data-canonical-src="https://raw.githubusercontent.com/LukasForst/BSY/master/bonus/assets/in.jpg" width="360" height="300" />
 
 The deserved welcome message!
 ```
