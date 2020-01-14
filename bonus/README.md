@@ -366,3 +366,5 @@ Unfortunately due to time pressure, I was unable to finish my botnet and therefo
 In this blog post I described how I managed to go through the last bonus assignment of [BSY](https://www.fel.cvut.cz/en/education/bk/predmety/47/02/p4702106.html) subject at FEE CTU. The assignment contained various types of tasks a security expert can deal with including PCAP analysis, system hacking and basic cryptographic tasks. 
 
 I must say that I was amazed by the complexity of some parts of the assignment and also by a fact, that when in trouble, Google knows literally everything even though, you give it just a clue.
+
+Also, I believe that without hint provided for the stage 3, I wouldn't be able to find out, that I'm supposed to use the RockYou password database and that we are supposed to attack via the brute-force on SSH.
