@@ -17,7 +17,55 @@ We were given a token for access as well as encryption, PCAP with captured traff
 * Follow the instructions you find on the way
 
 ## Stage 1
+Ok, let's see what's on the IP. -> `ncat`.
+```
+<Grinch> Please provide your token
+TroubledOlive
+<Grinch> What is the name of the malware? (use all capital letters)
 
+<Grinch> What type of malware is it? (Choose on from Banking Trojan, Ransomware, RAT, Adware, CryptoMiner)
+
+<Grinch> How many times did the victim computer connect to the C&C IP?
+
+<Grinch> Was any malicious executable downloaded (Yes/No)?
+
+You answered correctly 0 out of 4 questions.
+You have 14 remaining attempts.
+```
+Grinch is asking questions and we have limit for the answers, ok then. The limit would suggest that it is not possible to brute-force it. 
+
+![yes, no](assets/yes_no.jpg)
+
+### Brute-Forcing answers
+
+Second question has 5 options and the last one only two, so I will loose only 5 attempts. That's worth a risk. Moreover, we can try to guess other questions just for fun - the first one is open question so I can not simply ques it, but the third one is just number. I decided just to put the number of attempts I already tried.
+
+```
+<Grinch> Please provide your token
+TroubledOlive
+
+<Grinch> What is the name of the malware? (use all capital letters)
+I don't know yet.
+
+<Grinch> What type of malware is it? (Choose on from Banking Trojan, Ransomware, RAT, Adware, CryptoMiner)
+RAT
+
+<Grinch> How many times did the victim computer connect to the C&C IP?
+2
+
+<Grinch> Was any malicious executable downloaded (Yes/No)?
+No
+
+You answered correctly 3 out of 4 questions.
+You have 9 remaining attempts.
+```
+
+Woah. 3/4 without opening the PCAP. Really nice - the question number 3 was a surprise for me, I didn't expect getting it correct.
+
+
+The final virus name was [DarkVNC](https://reaqta.com/2017/11/short-journey-darkvnc/).
+
+And therefore the correct answers:
 ```
 <Grinch> Please provide your token
 TroubledOlive
@@ -29,11 +77,7 @@ RAT
 2
 <Grinch> Was any malicious executable downloaded (Yes/No)?
 No
-```
 
-The final virus name was [DarkVNC](https://reaqta.com/2017/11/short-journey-darkvnc/).
-
-```
 <Grinch> Saving you, is that what you think I was doing? Wrong-o. I merely noticed that you're improperly packaged, my dear.
 <Grinch> Here is something you migt need later: 3232235903
 Knock knock... Your VM might be handy.
@@ -42,7 +86,7 @@ Hint: MzcgMzAgMzAgMzAgMmMgMzggMzAgMzAgMzAgMmMgMzkgMzAgMzAgMzAgMmMgMzEgMzAgMzAgMz
 
 <Grinch> This is the end of stage 1. You rock!
 ```
-
+Finally!
 
 ## Stage 2
 Well... The hints were kind of cryptic. I must admit, that in the beginning I was confused. However, when programmer is confused, he just randomly puts things to the google and hopes for the best.
