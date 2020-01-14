@@ -67,7 +67,7 @@ The command basically returned the following ports `22`, `902`, `6667`, `8081`. 
 
 I didn't know, so I decided to let it sink in and started to investigate other ports.
 
-#### Hope?
+### Hope?
 Port 8081 was running a web page! That seemed as a lead to something so I tried `ncat` command
 ```bash
 > ncat 192.168.1.127 8081
@@ -109,7 +109,7 @@ So I started to investigate further and followed every link I found. Later on I 
 ```
 Unfortunately, the files contained nothing useful - waste of time.
 
-#### A New Hope
+### A New Hope
 
 I still had one port to spare - `6667`. The very same `ncat` as previously and let's go. I was amazed and disappointed by the result of the command.
 
@@ -132,7 +132,7 @@ Easter egg! Star Wars film - episode New Hope.
 ```
 However... again, nothing useful for the assignment.
 
-#### Back on the beginning
+### Back on the beginning
 
 I tried to step back and look at the message from Grinch one more time as I still didn't know what the numbers sequence was for. Also, the following part of the message was kind of weird as this was not a "knock knock joke" of any type and it wasn't even funny, so why is this here?
 ```
@@ -143,7 +143,7 @@ Could it possible be a hint? Let's try google once more.
 
 Apart from a lot of knock knock jokes, the first google page revealed interesting technique I didn't know about - port knocking. So... the numbers are ports and I'm supposed to knock on them!
 
-#### Knock Knock, anybody home?
+### Knock Knock, anybody home?
 I knocked using a very nice command [knock](http://manpages.ubuntu.com/manpages/xenial/man1/knock.1.html).
 ```bash
 knock 192.168.1.127 7000:tcp 8000:tcp 9000:tcp 10000:tcp
@@ -151,11 +151,11 @@ knock 192.168.1.127 7000:tcp 8000:tcp 9000:tcp 10000:tcp
 And now what? The [ArchWiki](https://wiki.archlinux.org/index.php/Port_knocking) said that this technique is used for opening SSH ports, but the machine has the ports opened already. Just to be sure, I ran `nmap` once again.
 
 ```bash
-sudo nmap -n -v -sS 192.168.1.127 -T3 -p-
+sudo nmap -n -v -sS -sV 192.168.1.127 -T3 -p-
 ```
 And now I got one more port - `8080` - to my collection! Wonderful!
 
-#### Exploiting the vulnerability
+### Exploiting the vulnerability
 The subsequent `curl` returned following output:
 ```
 This is a vulnerable web application for showcasing CVE 2014-6271, a.k.a. Shellshock.
@@ -173,7 +173,7 @@ The short exploration of machine showed a lot of files in the `/home/grinch` dir
 <my_ciphre here>
 ```
 
-#### Decrypting...
+### Decrypting...
 It was apparent that we are looking at the encrypted text. But which cipher was used? The first line seemed to be hint - so 3 letters, upper and lower cases and numbers... Again, let's google a bit - first result for key `symetric ciphers` led me to http://www.crypto-it.net/eng/symmetric/index.html with list of ciphers. Two candidates for the regex - RC4 and RC2. [Criptii](https://cryptii.com/) for the rescue!. 
 
 ![decryption](assets/decryption.png)
@@ -184,8 +184,49 @@ There are many Elves on the shelf, but Grace is special. Instructions for the ne
 ```
 
 ## Stage 3
-No instructions... Perfect.
+No instructions... Perfect. The only lead is to search for the user `grace` or `Grace` as I didn't know whether to use upper or lower case. Simple search executed on target machine via the previously mentioned vulnerability didn't show anything.
+```bash
+find . -user grace
+```
 
+At this point I was desperate as I ran out of ideas, also my friends doing the very same assignment had ho ideas as well. That was even worse.
+
+### Unexpected rescue!
+However, teachers must have noticed that we weren't progressing and sent help!.
+
+```
+In case you are working on the later stages of the bonus assignment and you feel stuck here is a couple of hints for you:
+
+- When in doubts, try to roll back and see what have you discovered during the previous stages.
+- Sometimes you have to use force to get things going. If that is not enough, use more force.
+- When running scripts with nmap, be sure it doesn't stop prematurely. 'unpwdb.timelimit' might be useful for that-Choose your words carefully. If used properly, you shouldn't need more than 20000 of them.-Speaking of which, take hints from the master lyrist here: https://www.youtube.com/watch?v=y3Ca3c6J9N4
+
+See you on Thursday.
+
+Ondrej
+```
+
+What the mail was basically saying is this:
+
+![decryption](assets/force.jpg)
+
+*(it is even funnier as my name is Lukas)*
+
+### I am one with the force
+
+`Use force` - say no more fam - definitely some kind of brute force attack. We had a user -> `Grace` or `grace` and the target machine `192.168.1.127`. Now the tricky part was, that there were two running SSHs - `22` and `902`. I decided to try both and to start with `22` and then move to `902`.
+
+I also knew, that it is enough to use only 20 000 passwords - you know, because Ondra said that. But from which password database? And again, Google for the rescue.
+
+![pass](assets/rockyou.png)
+
+20k passwords from [RockYou](https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/Leaked-Databases/rockyou-60.txt) database! Let's go then.
+
+```bash
+sudo nmap -v -n -sS -sV 192.168.1.127 -p 22 --script ssh-brute --script-args userdb=users,passdb=20k.txt,unpwdb.timelimit=0,brute.firstonly=true
+```
+
+And after 3 hours...
 ```
 Completed NSE at 20:28, 10904.94s elapsed
 Initiating NSE at 20:28
@@ -202,12 +243,18 @@ PORT   STATE SERVICE    VERSION
 MAC Address: 08:00:27:06:8F:03 (Oracle VirtualBox virtual NIC)
 ```
 
+### Finaly!
+
 Let's try!
 ```bash
 > ssh grace@192.168.1.127
 donaldduck
 ```
-And the deserved welcome message!
+and....
+
+<img src="assets/in.jpg" data-canonical-src="assets/in.jpg" width="360" height="300" />
+
+The deserved welcome message!
 ```
 *****************************************************************
 <Grinch> Congratulations! This is the end of stage 3!		*		
